@@ -1,16 +1,17 @@
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
+
 require('dotenv').config();
 
 const fs = require('fs');
 const { createServer } = require('@app-core/server');
-const { createConnection } = require('@app-core/mongoose');
+// const { createConnection } = require('@app-core/mongoose');
 
 const canLogEndpointInformation = process.env.CAN_LOG_ENDPOINT_INFORMATION;
 
-createConnection({
-  uri: process.env.MONGO_URI,
-});
+// createConnection({
+//   uri: process.env.MONGO_URI,
+// });
 
 const server = createServer({
   port: process.env.PORT,
@@ -18,7 +19,7 @@ const server = createServer({
   enableCors: true,
 });
 
-const ENDPOINT_CONFIGS = [];
+const ENDPOINT_CONFIGS = [{ path: './endpoints/reqline/' }, { path: './endpoints/hello/' }];
 
 function logEndpointMetaData(endpointConfigs) {
   const endpointData = [];
