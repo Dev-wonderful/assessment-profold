@@ -1,4 +1,4 @@
-const AppError = require('@app-core/errors/app-error');
+const { throwAppError } = require('@app-core/errors');
 
 function safeParseObject(input) {
   /** @type {string} */
@@ -6,7 +6,7 @@ function safeParseObject(input) {
   let jsonString = '';
 
   if (!content.startsWith('{') || !content.endsWith('}')) {
-    throw new AppError('Not a valid object format');
+    throwAppError('Not a valid object format');
   }
 
   content = content.slice(1, -1).trim();
@@ -17,13 +17,12 @@ function safeParseObject(input) {
 
   jsonString = `{${content}}`;
 
-  console.log(`Normalized JSON string: ${content} ${content.indexOf("'")} ${jsonString}`);
+  // console.log(`Normalized JSON string: ${content} ${content.indexOf("'")} ${jsonString}`);
 
-  // Step 4: Parse safely
   try {
     return JSON.parse(jsonString);
   } catch (err) {
-    throw new AppError(`Failed to parse object: ${err.message}`);
+    throwAppError(`Failed to parse object: ${err.message}`);
   }
 }
 

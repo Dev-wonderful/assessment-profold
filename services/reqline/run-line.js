@@ -30,18 +30,20 @@ async function runLine(commands) {
       .join('&');
   }
   request.full_url = `${request.full_url}${queries ? `?${queries}` : ''}`;
-  console.log('Parsed request:', request);
+  // console.log('Parsed request:', request);
   const httpRequest = axios({
     baseURL: request.full_url,
     headers: request.headers,
     method: request.method.toLowerCase(),
     data: request.body,
   });
+
   let result;
   const response = {};
 
   const startTimestamp = Date.now();
   response.request_start_timestamp = startTimestamp;
+
   try {
     result = await httpRequest;
   } catch (error) {
@@ -55,7 +57,7 @@ async function runLine(commands) {
   response.http_status = result.status;
   response.response_data = result.data || {};
 
-  console.log('Response:', response, request);
+  // console.log('Response:', response, request);
   delete request.method;
 
   return {

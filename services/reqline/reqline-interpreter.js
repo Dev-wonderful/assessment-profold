@@ -11,12 +11,6 @@ async function reqlineInterpreter(reqline) {
   const result = await runLine(parsedStructure);
   // console.log('Request result:', result);
 
-  // return {
-  //   request: result,
-  //   raw: reqline,
-  //   parsed: parsedStructure,
-  // };
-
   return result;
 }
 

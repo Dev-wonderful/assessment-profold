@@ -1,6 +1,5 @@
-const { ERROR_CODE } = require('@app-core/errors');
-const AppError = require('@app-core/errors/app-error');
-const { MULTIPLE_SPACES, MULTIPLE_DELIMITERS } = require('@app-core/messages');
+const { ERROR_CODE, throwAppError } = require('@app-core/errors');
+const { ReqlineMessages } = require('@app-core/messages');
 
 /**
  * HTTP [method] | URL [URL value] | HEADERS [header json value] | QUERY [query value json] | BODY [body value json]
@@ -23,10 +22,10 @@ function tokenizeLine(line) {
 
     if (char === WHITESPACE && char === lastChar) {
       // console.log(`WHITESPACE at index ${i}`);
-      throw new AppError(MULTIPLE_SPACES, ERROR_CODE.INVLDREQLINE);
+      throwAppError(ReqlineMessages.MULTIPLE_SPACES, ERROR_CODE.INVLDREQLINE);
     } else if (char === DELIMITER && char === lastChar) {
       // console.log(`DELIMITER at index ${i}`);
-      throw new AppError(MULTIPLE_DELIMITERS, ERROR_CODE.INVLDREQLINE);
+      throwAppError(ReqlineMessages.MULTIPLE_DELIMITERS, ERROR_CODE.INVLDREQLINE);
     } else {
       lastChar = char;
     }

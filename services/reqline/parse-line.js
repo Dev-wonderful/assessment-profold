@@ -1,12 +1,5 @@
-const AppError = require('@app-core/errors/app-error');
-const { ERROR_CODE } = require('@app-core/errors');
-const {
-  KEYWORD_NOT_UPPERCASE,
-  MISSING_HTTP_KEYWORD,
-  MISSING_URL_KEYWORD,
-  METHOD_NOT_UPPERCASE,
-  METHOD_NOT_SUPPORTED,
-} = require('@app-core/messages');
+const { ERROR_CODE, throwAppError } = require('@app-core/errors');
+const { ReqlineMessages } = require('@app-core/messages');
 const tokenize = require('./tokenize-line');
 const safeParseObject = require('./safe-parse-object');
 
@@ -31,28 +24,28 @@ function parseLine(reqline) {
 
     // Check for uppercase
     if (keyword !== keyword.toUpperCase()) {
-      throw new AppError(KEYWORD_NOT_UPPERCASE, ERROR_CODE.INVLDREQLINE);
+      throwAppError(ReqlineMessages.KEYWORD_NOT_UPPERCASE, ERROR_CODE.INVLDREQLINE);
     }
 
     // Check if keyword is allowed
     if (!ALLOWED_KEYWORDS.has(keyword)) {
-      throw new AppError(`Invalid keyword: ${keyword}`, ERROR_CODE.INVLDREQLINE);
+      throwAppError(`Invalid keyword: ${keyword}`, ERROR_CODE.INVLDREQLINE);
     }
 
     // Check for required keywords and the order
     if (commands.length === 0 && keyword !== 'HTTP') {
-      throw new AppError(MISSING_HTTP_KEYWORD, ERROR_CODE.INVLDREQLINE);
+      throwAppError(ReqlineMessages.MISSING_HTTP_KEYWORD, ERROR_CODE.INVLDREQLINE);
     } else if (commands.length === 1 && keyword !== 'URL') {
-      throw new AppError(MISSING_URL_KEYWORD, ERROR_CODE.INVLDREQLINE);
+      throwAppError(ReqlineMessages.MISSING_URL_KEYWORD, ERROR_CODE.INVLDREQLINE);
     }
 
     // Check for allowed HTTP methods
     if (keyword === 'HTTP') {
       if (rawValue !== rawValue.toUpperCase()) {
-        throw new AppError(METHOD_NOT_UPPERCASE, ERROR_CODE.INVLDREQLINE);
+        throwAppError(ReqlineMessages.METHOD_NOT_UPPERCASE, ERROR_CODE.INVLDREQLINE);
       }
       if (!ALLOWED_HTTP_METHODS.has(rawValue)) {
-        throw new AppError(METHOD_NOT_SUPPORTED, ERROR_CODE.INVLDREQLINE);
+        throwAppError(ReqlineMessages.METHOD_NOT_SUPPORTED, ERROR_CODE.INVLDREQLINE);
       }
     }
 
@@ -64,7 +57,7 @@ function parseLine(reqline) {
       }
     } catch (err) {
       console.error(`Error parsing value for command "${keyword}": ${err.message}`);
-      throw new AppError(`Invalid JSON format in ${keyword} section`, ERROR_CODE.INVLDREQLINE);
+      throwAppError(`Invalid JSON format in ${keyword} section`, ERROR_CODE.INVLDREQLINE);
     }
 
     commands.push({ keyword: keyword.toUpperCase(), value });

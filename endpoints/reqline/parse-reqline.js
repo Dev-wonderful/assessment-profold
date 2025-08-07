@@ -7,9 +7,7 @@ module.exports = createHandler({
   async handler(rc, helpers) {
     const payload = rc.body;
 
-    const parsedReqline = await Promise.all(
-      payload.reqline.map((line) => reqlineInterpreter(line))
-    );
+    const parsedReqline = await reqlineInterpreter(payload.reqline);
 
     return {
       status: helpers.http_statuses.HTTP_200_OK,
